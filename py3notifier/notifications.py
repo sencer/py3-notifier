@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import re
-import time
 from threading import Thread
 
 from gi.repository import Gio, GLib
@@ -14,8 +12,8 @@ class Py3status:
 
     def post_config_hook(self):
         self._init_dbus()
-        self.proxy.call('SignalNotificationCount', None,
-            Gio.DBusCallFlags.NO_AUTO_START, 500, None
+        self.proxy.call(
+            "SignalNotificationCount", None, Gio.DBusCallFlags.NO_AUTO_START, 500, None
         )
 
     def _init_dbus(self):
@@ -36,10 +34,13 @@ class Py3status:
             lambda *args: update(self, *args),
         )
         self.proxy = Gio.DBusProxy.new_sync(
-            self.bus, Gio.DBusProxyFlags.NONE, None,
-            'org.freedesktop.Notifications',
-            '/org/freedesktop/Notifications',
-            'org.freedesktop.Notifications', None
+            self.bus,
+            Gio.DBusProxyFlags.NONE,
+            None,
+            "org.freedesktop.Notifications",
+            "/org/freedesktop/Notifications",
+            "org.freedesktop.Notifications",
+            None,
         )
 
         thread = Thread(target=lambda: GLib.MainLoop().run())
@@ -55,8 +56,8 @@ class Py3status:
         }
 
     def on_click(self, event):
-        self.proxy.call('ShowNotifications', None,
-            Gio.DBusCallFlags.NO_AUTO_START, 500, None
+        self.proxy.call(
+            "ShowNotifications", None, Gio.DBusCallFlags.NO_AUTO_START, 500, None
         )
 
         return self.notifications()
