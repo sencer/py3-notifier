@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name="py3notifier",
-    version="0.0",
+    version="0.1",
     description="py3status module for i3-notifier",
     author="Sencer Selcuk",
     packages=["py3notifier"],

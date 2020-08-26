@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from threading import Thread
+from threading import Thread, Timer
 
 from gi.repository import Gio, GLib
 
@@ -9,6 +9,8 @@ class Py3status:
     def __init__(self):
         self.urgency = 0
         self.num_notifications = 0
+        self.single_line = ""
+        self.timer = None
 
     def post_config_hook(self):
         self._init_dbus()
@@ -17,11 +19,24 @@ class Py3status:
         )
 
     def _init_dbus(self):
-        def update(mod, *args):
-            n, u = args[-1]
-            mod.num_notifications = n
-            mod.urgency = u
-            mod.py3.update()
+        def clear_msg(py3):
+            py3.single_line = ""
+            py3.py3.update()
+
+        def update(py3, *args):
+            mode, num, urgency, msg = args[-1]
+            py3.num_notifications = num
+            py3.urgency = urgency
+
+            if self.timer is not None:
+                self.timer.cancel()
+
+            py3.single_line = msg
+
+            if mode == 0:  # notification added
+                self.timer = Timer(30, clear_msg, (self,)).start()
+
+            py3.py3.update()
 
         self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
         self.bus.signal_subscribe(
@@ -51,11 +66,12 @@ class Py3status:
 
         return {
             "cached_until": self.py3.CACHE_FOREVER,
-            "full_text": str(self.num_notifications),
+            "full_text": self.single_line or str(self.num_notifications),
             "urgent": self.urgency == 2,
         }
 
     def on_click(self, event):
+        self.single_line = None
         self.proxy.call(
             "ShowNotifications", None, Gio.DBusCallFlags.NO_AUTO_START, 500, None
         )
