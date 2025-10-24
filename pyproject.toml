@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "py3notifier"
+version = "0.2"
+description = "py3status module for i3-notifier"
+authors = [
+    {name = "Sencer Selcuk"},
+]
+
+[tool.setuptools]
+packages = ["py3notifier"]
+
+[project.entry-points."py3status"]
+notifications = "py3notifier.notifications"
