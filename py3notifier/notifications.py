@@ -23,8 +23,8 @@ class Py3status:
       py3.single_line = ""
       py3.py3.update()  # type: ignore
 
-    def update(py3, *args):
-      mode, num, urgency, msg = args[-1]
+    def update(py3, params):
+      mode, num, urgency, msg = params
       py3.num_notifications = num
       py3.urgency = urgency
 
@@ -34,7 +34,8 @@ class Py3status:
       py3.single_line = msg
 
       if mode == 0:  # notification added
-        self.timer = Timer(30, clear_msg, (self,)).start()
+        self.timer = Timer(30, clear_msg, (self,))
+        self.timer.start()
 
       py3.py3.update()  # type: ignore
 
@@ -46,7 +47,7 @@ class Py3status:
       None,
       None,
       0,
-      lambda *args: update(self, *args),
+      lambda conn, sender, path, iface, signal, params: update(self, params),
     )
     self.proxy = Gio.DBusProxy.new_sync(
       self.bus,

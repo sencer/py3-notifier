@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "py3notifier"
-version = "0.3"
+version = "0.4"
 description = "py3status module for i3-notifier"
 authors = [
     {name = "Sencer Selcuk"},
