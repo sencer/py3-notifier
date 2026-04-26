@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "py3notifier"
-version = "0.2"
+version = "0.3"
 description = "py3status module for i3-notifier"
 authors = [
     {name = "Sencer Selcuk"},
@@ -15,3 +15,14 @@ packages = ["py3notifier"]
 
 [project.entry-points."py3status"]
 notifications = "py3notifier.notifications"
+
+[tool.ruff]
+indent-width = 2
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
